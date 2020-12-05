@@ -1,12 +1,12 @@
 import { Action } from '@ngrx/store';
 
-export function simpleReducer(state: string = 'Hello world!', action: Action) {
+export function simpleReducer(state: string = 'English Language Selected', action: Action) {
   console.log(action.type, state);
   switch (action.type) {
     case 'FRENCH':
-      return state = 'Bonjour le monde!';
+      return state = 'French Language Selected';
     case 'ENGLISH':
-      return state = 'Hello World!';
+      return state = 'English Language Selected';
     default:
       return state;
   }
