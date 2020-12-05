@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "statemgt"
+    }
+  },
+  "defaultProject": "statemgt",
+  "cli": {
+    "analytics": "db85dcf8-3bca-4f9c-9500-548ef11761fa"
+  }
 }
