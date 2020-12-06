@@ -1,15 +1,14 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { StoreModule } from '@ngrx/store';
-import {simpleReducer} from './simple.reducer'
-import { voteReducer } from './vote.reducer';
 import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { StoreModule } from '@ngrx/store';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent, simpleReducer, voteReducer, reducerMap } from './app.component';
+
+
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule,FormsModule, StoreModule.forRoot({vote : voteReducer, message : simpleReducer}),],
+  imports: [BrowserModule, AppRoutingModule,FormsModule, StoreModule.forRoot(reducerMap),],
   providers: [],
   bootstrap: [AppComponent], 
 })

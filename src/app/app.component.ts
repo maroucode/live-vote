@@ -1,22 +1,16 @@
 import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { ActionReducerMap, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Post } from './vote.state';
-import { UPVOTE, NEWVOTE, RESET, DOWNVOTE } from './vote.actions';
-import { voteReducer } from './vote.reducer';
+import { Action } from '@ngrx/store';
 
-interface AppState {
-  message: string;
+
+interface AppState{
+  lang : string;
+  count : Post;
 }
-
-interface VoteState {
-  vote: Post;
-}
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   message$: Observable<String>;
@@ -24,11 +18,10 @@ export class AppComponent {
   vote: Observable<Post>;
 
   constructor(
-    private store: Store<AppState>,
-    private voteStore: Store<VoteState>
+    private store: Store<AppState>
   ) {
-    this.vote = this.voteStore.select('vote');
-    this.message$ = this.store.select('message');
+    this.vote = this.store.select('count');
+    this.message$ = this.store.select('lang');
   }
   displayEnglish() {
     this.store.dispatch({ type: 'ENGLISH' });
@@ -37,15 +30,56 @@ export class AppComponent {
     this.store.dispatch({ type: 'FRENCH' });
   }
   newVote(postText: string) {
-    this.voteStore.dispatch(new NEWVOTE(postText));
+    this.store.dispatch({ type: 'NEWVOTE', playload: postText });
   }
   resetVote() {
-    this.voteStore.dispatch(new RESET());
+    this.store.dispatch({ type: 'RESET' });
   }
   upVote() {
-    this.voteStore.dispatch(new UPVOTE());
+    this.store.dispatch({ type: 'UPVOTE' });
   }
   downVote() {
-    this.voteStore.dispatch(new DOWNVOTE());
+    this.store.dispatch({ type: 'DOWNVOTE' });
   }
 }
+export const initialPostState = { text: 'new vote', likes: 0 };
+export interface Post {
+  text: string;
+  likes: number;
+}
+export class PlayLoadAction implements Action {
+  readonly type: string;
+  constructor(public playload: Object) {}
+}
+export function voteReducer(state: Post = initialPostState, action: Action) {
+  console.log(state, action.type);
+  switch (action.type) {
+    case 'UPVOTE':
+      return Object.assign({}, state, { likes: state.likes + 1 });
+    case 'DOWNVOTE':
+      return Object.assign({}, state, { likes: state.likes - 1 });
+    case 'NEWVOTE':
+      return Object.assign({}, state, { text: ((action as PlayLoadAction).playload as string), likes: 0 });
+    case 'RESET':
+      return initialPostState;
+    default:
+      return state;
+  }
+}
+export const initialStateString = 'English Language Selected';
+export function simpleReducer(
+  state: string = initialStateString,
+  action: Action
+) {
+  console.log(action.type, state);
+  switch (action.type) {
+    case 'FRENCH':
+      return (state = 'French Language Selected');
+    case 'ENGLISH':
+      return (state = 'English Language Selected');
+    default:
+      return state;
+  }
+}
+export const reducerMap : ActionReducerMap<AppState> = {lang: simpleReducer, count : voteReducer};
+
