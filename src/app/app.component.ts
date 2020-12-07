@@ -74,6 +74,7 @@ export function simpleReducer(
   console.log(action.type, state);
   switch (action.type) {
     case 'FRENCH':
+      //we can also user object.assign or ...state, keep in mind state is immutable
       return (state = 'French Language Selected');
     case 'ENGLISH':
       return (state = 'English Language Selected');
